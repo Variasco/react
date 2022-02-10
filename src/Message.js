@@ -1,6 +1,6 @@
 const Message = (propsObj) => {
     return (
-        <p>Props is: {propsObj.value}</p>
+        <p className="message">Props is: <span>{propsObj.value}</span></p>
     );
 }
 

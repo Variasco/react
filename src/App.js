@@ -1,4 +1,4 @@
-import './App.css';
+import './App.scss';
 import Message from './Message.js';
 
 function App() {
