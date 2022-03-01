@@ -9,47 +9,65 @@ body {
 }
 
 #root {
-  padding: 30px;
-  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  height: 50px;
+  padding: 0px 15px;
+  line-height: 50px;
+  border-bottom: 1px solid #e6399b;
+}
+
+.menu {
+  &__link {
+    padding: 10px 14px;
+
+    &:not(:last-child) {
+      margin-right: 15px;
+    }
+  }
 }
 
 .wrapper {
   margin: 0 auto;
   display: flex;
   justify-content: center;
-  background-color: #85004b;
+
   width: 560px;
+}
 
-  & nav {
-    flex-grow: 1;
-  }
+.chats-container {
+  display: flex;
+  flex-grow: 1;
+}
 
-  & h2 {
-    margin-bottom: 15px;
-  }
+.chats {
+  width: 270px;
+  background-color: #85004b;
+  border-right: 1px solid #e6399b;
 }
 
 .messages-container {
+  flex-grow: 1;
+  min-width: 350px;
+  height: calc(100vh - 50px);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  border: 1px solid #e6399b;
   padding: 15px;
 }
 
 .message-list {
   margin-bottom: 15px;
-  width: 300px;
-  height: 350px;
-  border-radius: 10px;
+  height: 100%;
   overflow-y: auto;
-
   display: flex;
   flex-direction: column;
   gap: 10px;
+  padding-right: 10px;
 
   &__form {
-    width: 300px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -70,12 +88,20 @@ body {
 }
 
 .message {
+  width: 300px;
   font-size: 16px;
   border-radius: 8px;
-  width: 85%;
   background-color: #e6399b;
 
   padding: 0px 10px 8px 10px;
+
+  &_right {
+    align-self: flex-end;
+  }
+
+  &_left {
+    align-self: flex-start;
+  }
 
   &__author {
     font-size: 10px;
