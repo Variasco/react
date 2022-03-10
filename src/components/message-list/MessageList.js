@@ -22,13 +22,13 @@ export const MessageList = () => {
     const { roomId } = useParams();
     const messages = messageList[roomId] ?? [];
 
-    const clickHandler = useCallback((text, author = "User") => {
+    const clickHandler = useCallback((text, author = "User", date = new Date()) => {
         if (text) {
             setMessageList((messageList) => ({
                 ...messageList,
                 [roomId]: [
                     ...(messageList[roomId] ?? []),
-                    { author, text }
+                    { author, text, date }
                 ]
             }));
         }
