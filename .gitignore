@@ -23,4 +23,5 @@ yarn-debug.log*
 yarn-error.log*
 
 # other
-Examples.js
+src/components/examples/
+src/components/examples/index.js
