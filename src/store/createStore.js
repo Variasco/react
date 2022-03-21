@@ -5,18 +5,21 @@ import thunk from "redux-thunk";
 import { chatsReducer } from "./chats";
 import { messagesReducer } from "./messages";
 import { profileReducer } from "./profile";
-import { logger, botAnswer } from "./middlewares";
+import { catFactsReducer } from "./cat-facts";
+import { getCatFactsApi } from "../api";
+import { logger } from "./middlewares";
 
 const persistConfig = {
     key: "root",
     storage,
-    blacklist: ["profile"],
+    whitelist: [""],
 };
 
 const reduser = combineReducers({
     profile: profileReducer,
     chats: chatsReducer,
     messages: messagesReducer,
+    catFacts: catFactsReducer,
 });
 
 export const store = createStore(
@@ -24,8 +27,7 @@ export const store = createStore(
     compose(
         applyMiddleware(
             // logger,
-            // botAnswer,   // Реализован через thunk в /src/store/messages/thunks.js
-            thunk,
+            thunk.withExtraArgument({ getCatFactsApi }),
         ),
         window.__REDUX_DEVTOOLS_EXTENSION__
             ? window.__REDUX_DEVTOOLS_EXTENSION__()
