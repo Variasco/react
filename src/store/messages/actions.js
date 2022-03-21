@@ -13,8 +13,8 @@ export const deleteMessage = (roomId, messageId) => {
     return { type: DELETE_MESSAGE, payload: { roomId, messageId } };
 };
 
-export const updateValue = (value) => {
-    return { type: UPDATE_VALUE, payload: value };
+export const updateValue = (roomId, value) => {
+    return { type: UPDATE_VALUE, payload: { roomId, value } };
 };
 
 export const clearChat = (roomId) => {

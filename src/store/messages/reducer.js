@@ -18,7 +18,7 @@ const InitialState = {
             },
         ],
     },
-    value: "",
+    values: {},
 };
 
 export const messagesReducer = (state = InitialState, action) => {
@@ -52,15 +52,17 @@ export const messagesReducer = (state = InitialState, action) => {
                 },
             };
         case UPDATE_VALUE:
-            return { ...state, ...action.payload };
-        case CLEAR_CHAT:
             return {
                 ...state,
-                messages: {
-                    ...state.messages,
-                    [action.payload]: [],
+                values: {
+                    ...state.values,
+                    [action.payload.roomId]: action.payload.value,
                 },
             };
+        case CLEAR_CHAT:
+            delete state.values[action.payload];
+            delete state.messages[action.payload];
+            return { ...state };
         default:
             return state;
     }
