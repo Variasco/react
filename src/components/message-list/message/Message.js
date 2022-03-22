@@ -9,8 +9,6 @@ export const Message = ({ item, roomId }) => {
     const messagePos =
         item.author === "User" ? "message_right" : "message_left";
 
-    // console.log("Message component");
-
     return (
         <Box
             className={`${messagePos}`}
@@ -27,7 +25,7 @@ export const Message = ({ item, roomId }) => {
                 </Typography>
                 <Typography>{item.text}</Typography>
                 <Typography sx={{ fontSize: 12 }} color="text.secondary">
-                    {format(item?.date, "HH:mm")}
+                    {format(new Date(item?.date), "HH:mm")}
                 </Typography>
             </Box>
             <Box sx={{ alignSelf: "flex-start", p: 0 }}>

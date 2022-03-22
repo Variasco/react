@@ -5,55 +5,45 @@ import { Send } from "@mui/icons-material";
 import { Message } from "./message";
 import {
     messagesSelector,
-    sendMessage,
     updateValue,
     valueSelector,
+    sendMessageWithBot,
 } from "../../store";
-
-const getBotAnswer = (message) => {
-    const answers = {
-        1: "One",
-        2: "Two",
-        3: "Three",
-        4: "Four",
-    };
-
-    return answers[message] || "Something on bot's language";
-};
 
 export const MessageList = () => {
     const dispatch = useDispatch();
     const { roomId } = useParams();
 
-    // console.log("MessageList component");
-
     /* useMemo нужен для сохранения ссылки на функцию messagesSelector,
     так как внутри store/messages/selectors.js через корирование передается пропс roomId
     и возвращается новая функция с новой ссылкой */
-    const getMessages = useMemo(() => messagesSelector(roomId), [roomId]);
-    const messages = useSelector(getMessages);
-    const value = useSelector(valueSelector);
-    const [message, setMessage] = useState(value);
+    const messages = useSelector(
+        useMemo(() => messagesSelector(roomId), [roomId]),
+    );
+    const value = useSelector(useMemo(() => valueSelector(roomId), [roomId]));
+
+    const [message, setMessage] = useState({});
+
+    const messageListRef = useRef(null);
 
     const send = useCallback(
-        (message, author = "User") => {
-            if (message) {
+        (text, author = "User") => {
+            if (text) {
                 dispatch(
-                    sendMessage(roomId, {
+                    sendMessageWithBot(roomId, {
                         author: author || "Bot",
-                        text: message,
+                        text,
                     }),
                 );
-                dispatch(updateValue(message));
             }
-            setMessage("");
+            setMessage({ ...message, [roomId]: "" });
         },
-        [roomId, dispatch],
+        [message, roomId, dispatch],
     );
 
     const keyPressHandler = (e) => {
         if (e.code === "Enter" || e.code === "NumpadEnter") {
-            send(message);
+            send(message[roomId]);
         }
     };
 
@@ -66,24 +56,9 @@ export const MessageList = () => {
         }
     }, []);
 
-    const messageRef = useRef(null);
-    const messageListRef = useRef(null);
-
     useEffect(() => {
-        messageRef.current?.focus();
-    }, []);
-
-    useEffect(() => {
-        const lastMessage = messages[messages.length - 1];
-        if (messages.length && lastMessage.author !== "Bot") {
-            const timerId = setTimeout(() => {
-                send(getBotAnswer(lastMessage.text), "Bot");
-            }, 500);
-            return () => {
-                clearInterval(timerId);
-            };
-        }
-    }, [send, messages, roomId]);
+        setMessage((message) => ({ ...message, [roomId]: value }));
+    }, [roomId, value]);
 
     useEffect(() => {
         scrollBot();
@@ -99,17 +74,21 @@ export const MessageList = () => {
             <div className="message-list__form">
                 <input
                     type="text"
-                    ref={messageRef}
                     className="message-list__input"
                     placeholder="Enter message..."
-                    onChange={(e) => setMessage(e.target.value)}
+                    onChange={(e) =>
+                        setMessage({ ...message, [roomId]: e.target.value })
+                    }
                     onKeyPress={keyPressHandler}
-                    value={message}
+                    value={message[roomId] || ""}
+                    onBlur={() =>
+                        dispatch(updateValue(roomId, message[roomId]))
+                    }
                 />
                 <Send
                     className="message-list__send"
                     type="submit"
-                    onClick={() => send(message)}
+                    onClick={() => send(message[roomId])}
                 />
             </div>
         </div>
