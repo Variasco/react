@@ -6,7 +6,7 @@ import {
 } from "./types";
 import { nanoid } from "nanoid";
 
-const InitialState = {
+const initialState = {
     messages: {
         chat1: [
             { author: "User", text: "Hello", date: new Date(), id: nanoid() },
@@ -21,7 +21,7 @@ const InitialState = {
     values: {},
 };
 
-export const messagesReducer = (state = InitialState, action) => {
+export const messagesReducer = (state = initialState, action) => {
     switch (action.type) {
         case SEND_MESSAGE:
             return {

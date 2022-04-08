@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ChatPage, ProfilePage, Page404 } from "./pages";
+import { ChatPage, ProfilePage, Page404, CatFactsPage } from "./pages";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { Header } from "./components";
 import { store, persistor } from "./store";
@@ -33,6 +33,10 @@ ReactDOM.render(
                             <Route path="/" element={<h1>Home page</h1>} />
                             <Route path="/chats/*" element={<ChatPage />} />
                             <Route path="/profile" element={<ProfilePage />} />
+                            <Route
+                                path="/cat-facts"
+                                element={<CatFactsPage />}
+                            />
                             <Route path="/*" element={<Page404 />} />
                         </Routes>
                     </BrowserRouter>

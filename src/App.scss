@@ -29,11 +29,12 @@ body {
 }
 
 .wrapper {
+    padding: 16px;
     margin: 0 auto;
     display: flex;
-    justify-content: center;
-
-    width: 560px;
+    max-width: 940px;
+    flex-direction: column;
+    align-items: center;
 }
 
 .chats-container {
@@ -132,5 +133,28 @@ body {
 
     &__input {
         margin-bottom: 5px;
+    }
+}
+
+.cat-facts {
+    &__text {
+        align-self: stretch;
+        margin-top: 12px;
+        border: 1px solid;
+        border-radius: 8px;
+        padding: 5px;
+        background-color: #e6399b;
+    }
+    &__form {
+        margin-top: 12px;
+    }
+    &__input {
+        padding: 4px;
+        width: 50px;
+        margin-right: 6px;
+    }
+    &__button {
+        line-height: 23px;
+        padding: 0 4px;
     }
 }

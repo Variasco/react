@@ -26,6 +26,10 @@ const pages = [
         name: "Profile",
         path: "/profile",
     },
+    {
+        name: "Cat facts",
+        path: "/cat-facts",
+    },
 ];
 
 export const Header = () => {

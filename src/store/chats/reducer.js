@@ -1,10 +1,10 @@
 import { ADD_NEW_CHAT, DELETE_CHAT } from "./types";
 
-const InitialState = {
+const initialState = {
     chats: ["chat1", "chat2", "chat3"],
 };
 
-export const chatsReducer = (state = InitialState, action) => {
+export const chatsReducer = (state = initialState, action) => {
     switch (action.type) {
         case ADD_NEW_CHAT:
             return { ...state, chats: [...state.chats, action.payload] };
