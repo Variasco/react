@@ -2,7 +2,7 @@ import { Button, Box, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { format } from "date-fns";
 import { useDispatch } from "react-redux";
-import { deleteMessage } from "../../../store";
+import { deleteMessageFromDB } from "../../../store/messages";
 
 export const Message = ({ item, roomId }) => {
     const dispatch = useDispatch();
@@ -24,14 +24,22 @@ export const Message = ({ item, roomId }) => {
                     {item.author}
                 </Typography>
                 <Typography>{item.text}</Typography>
-                <Typography sx={{ fontSize: 12 }} color="text.secondary">
-                    {format(new Date(item?.date), "HH:mm")}
-                </Typography>
+                {item.date ? (
+                    <Typography sx={{ fontSize: 12 }} color="text.secondary">
+                        {format(new Date(item?.date), "HH:mm")}
+                    </Typography>
+                ) : (
+                    <Typography sx={{ fontSize: 12 }} color="text.secondary">
+                        HH:mm
+                    </Typography>
+                )}
             </Box>
             <Box sx={{ alignSelf: "flex-start", p: 0 }}>
                 <Button
                     sx={{ minWidth: "24px", p: "5px" }}
-                    onClick={() => dispatch(deleteMessage(roomId, item?.id))}
+                    onClick={() =>
+                        dispatch(deleteMessageFromDB(roomId, item?.id))
+                    }
                 >
                     <CloseIcon />
                 </Button>

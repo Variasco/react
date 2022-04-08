@@ -14,7 +14,6 @@ export const getCatFacts = (amount) => async (dispatch, _, api) => {
         } else {
             result = data;
         }
-        console.log("data", result);
 
         dispatch(getCatFactsSuccess(result));
     } catch (e) {

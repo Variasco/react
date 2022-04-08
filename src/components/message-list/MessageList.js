@@ -5,9 +5,10 @@ import { Send } from "@mui/icons-material";
 import { Message } from "./message";
 import {
     messagesSelector,
-    updateValue,
-    valueSelector,
-    sendMessageWithBot,
+    sendMessageInDB,
+    getMessagesFromDB,
+    chatsSelector,
+    updateValueInDB,
 } from "../../store";
 
 export const MessageList = () => {
@@ -20,9 +21,13 @@ export const MessageList = () => {
     const messages = useSelector(
         useMemo(() => messagesSelector(roomId), [roomId]),
     );
-    const value = useSelector(useMemo(() => valueSelector(roomId), [roomId]));
 
-    const [message, setMessage] = useState({});
+    const chats = useSelector(chatsSelector);
+    const valueses = chats.reduce((acc, cur) => {
+        acc[cur.title] = cur.value;
+        return acc;
+    }, {});
+    const [values, setValue] = useState(valueses);
 
     const messageListRef = useRef(null);
 
@@ -30,20 +35,20 @@ export const MessageList = () => {
         (text, author = "User") => {
             if (text) {
                 dispatch(
-                    sendMessageWithBot(roomId, {
+                    sendMessageInDB(roomId, {
                         author: author || "Bot",
                         text,
                     }),
                 );
             }
-            setMessage({ ...message, [roomId]: "" });
+            setValue({ ...values, [roomId]: "" });
         },
-        [message, roomId, dispatch],
+        [roomId, dispatch, values],
     );
 
     const keyPressHandler = (e) => {
         if (e.code === "Enter" || e.code === "NumpadEnter") {
-            send(message[roomId]);
+            send(values[roomId]);
         }
     };
 
@@ -57,12 +62,12 @@ export const MessageList = () => {
     }, []);
 
     useEffect(() => {
-        setMessage((message) => ({ ...message, [roomId]: value }));
-    }, [roomId, value]);
-
-    useEffect(() => {
         scrollBot();
     }, [messages, scrollBot]);
+
+    useEffect(() => {
+        dispatch(getMessagesFromDB(roomId));
+    }, [dispatch, roomId]);
 
     return (
         <div className="messages-container">
@@ -77,18 +82,18 @@ export const MessageList = () => {
                     className="message-list__input"
                     placeholder="Enter message..."
                     onChange={(e) =>
-                        setMessage({ ...message, [roomId]: e.target.value })
+                        setValue({ ...values, [roomId]: e.target.value })
                     }
                     onKeyPress={keyPressHandler}
-                    value={message[roomId] || ""}
+                    value={values[roomId]}
                     onBlur={() =>
-                        dispatch(updateValue(roomId, message[roomId]))
+                        dispatch(updateValueInDB(roomId, values[roomId]))
                     }
                 />
                 <Send
                     className="message-list__send"
                     type="submit"
-                    onClick={() => send(message[roomId])}
+                    onClick={() => send(values[roomId])}
                 />
             </div>
         </div>

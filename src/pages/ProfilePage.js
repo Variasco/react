@@ -5,7 +5,7 @@ import {
     toggleVisibleProfile,
     updateProfile,
     profileSelector,
-} from "../../store";
+} from "../store";
 
 export const ProfilePage = () => {
     const state = useSelector(profileSelector);

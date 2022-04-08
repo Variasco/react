@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
-import { catFactsSelector } from "../../store";
+import { catFactsSelector, getCatFacts } from "../store";
 import { useDispatch, useSelector } from "react-redux";
-import { getCatFacts } from "../../store";
-
-// const catFactsSelector = (state) => state.catFacts;
 
 export const CatFactsPage = () => {
     const dispatch = useDispatch();
@@ -31,7 +28,7 @@ export const CatFactsPage = () => {
                 </p>
             ))}
             <div className="cat-facts__form">
-                <label for="amount">Amount: </label>
+                <label htmlFor="amount">Amount: </label>
                 <input
                     id="amount"
                     onChange={(e) => setAmount(e.target.value)}
