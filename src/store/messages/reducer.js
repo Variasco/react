@@ -1,68 +1,62 @@
 import {
-    SEND_MESSAGE,
-    DELETE_MESSAGE,
-    UPDATE_VALUE,
-    CLEAR_CHAT,
+    GET_MESSAGES_START,
+    GET_MESSAGES_SUCCESS,
+    GET_MESSAGES_ERROR,
+    SEND_MESSAGE_START,
+    SEND_MESSAGE_SUCCESS,
+    SEND_MESSAGE_ERROR,
+    DELETE_MESSAGE_START,
+    DELETE_MESSAGE_SUCCESS,
+    DELETE_MESSAGE_ERROR,
 } from "./types";
-import { nanoid } from "nanoid";
 
 const initialState = {
-    messages: {
-        chat1: [
-            { author: "User", text: "Hello", date: new Date(), id: nanoid() },
-            {
-                author: "Bot",
-                text: "Hello, my friend",
-                date: new Date(),
-                id: nanoid(),
-            },
-        ],
-    },
-    values: {},
+    pendingGet: false,
+    pendingSend: false,
+    pendingDelete: false,
+    errorGet: null,
+    errorSend: null,
+    errorDelete: null,
+    messages: {},
 };
 
 export const messagesReducer = (state = initialState, action) => {
     switch (action.type) {
-        case SEND_MESSAGE:
+        case GET_MESSAGES_START:
+            return { ...state, pendingGet: true, errorGet: null };
+        case GET_MESSAGES_SUCCESS:
             return {
                 ...state,
+                pendingGet: false,
                 messages: {
                     ...state.messages,
-                    [action.payload.roomId]: [
-                        ...(state.messages[action.payload.roomId] ?? []),
-                        {
-                            ...action.payload.message,
-                            date: new Date(),
-                            id: nanoid(),
-                        },
-                    ],
+                    [action.payload.roomId]: action.payload.messages,
                 },
             };
-        case DELETE_MESSAGE:
+        case GET_MESSAGES_ERROR:
+            return { ...state, pendingGet: false, errorGet: action.payload };
+
+        case SEND_MESSAGE_START:
+            return { ...state, pendingSend: true, errorSend: null };
+        case SEND_MESSAGE_SUCCESS:
             return {
                 ...state,
-                messages: {
-                    ...state.messages,
-                    [action.payload.roomId]: [
-                        ...state.messages[action.payload.roomId].filter(
-                            (message) =>
-                                message.id !== action.payload.messageId,
-                        ),
-                    ],
-                },
+                pendingSend: false,
             };
-        case UPDATE_VALUE:
+        case SEND_MESSAGE_ERROR:
+            return { ...state, pendingSend: false, errorSend: action.payload };
+
+        case DELETE_MESSAGE_START:
+            return { ...state, pendingDelete: true };
+        case DELETE_MESSAGE_SUCCESS:
+            return { ...state, pendingDelete: false };
+        case DELETE_MESSAGE_ERROR:
             return {
                 ...state,
-                values: {
-                    ...state.values,
-                    [action.payload.roomId]: action.payload.value,
-                },
+                pendingDelete: false,
+                errorDelete: action.payload,
             };
-        case CLEAR_CHAT:
-            delete state.values[action.payload];
-            delete state.messages[action.payload];
-            return { ...state };
+
         default:
             return state;
     }

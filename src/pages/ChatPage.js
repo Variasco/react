@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { Layout, ChatsList, MessageList } from "../../components";
+import { Layout, ChatsList, MessageList } from "../components";
 
 export const ChatPage = () => {
     const navigate = useNavigate();

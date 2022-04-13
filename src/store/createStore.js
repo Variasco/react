@@ -1,38 +1,48 @@
 import { combineReducers, createStore, applyMiddleware, compose } from "redux";
-import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
 import { chatsReducer } from "./chats";
 import { messagesReducer } from "./messages";
 import { profileReducer } from "./profile";
 import { catFactsReducer } from "./cat-facts";
-import { getCatFactsApi } from "../api";
-import { logger } from "./middlewares";
-
-const persistConfig = {
-    key: "root",
-    storage,
-    whitelist: [""],
-};
-
-const reduser = combineReducers({
-    profile: profileReducer,
-    chats: chatsReducer,
-    messages: messagesReducer,
-    catFacts: catFactsReducer,
-});
+import { sessionReducer } from "./session";
+import {
+    getCatFactsApi,
+    createChatApi,
+    getChatsApi,
+    getMessagesApi,
+    sendMessageApi,
+    getSessionApi,
+    deleteChatApi,
+    deleteMessageApi,
+    updateValueApi,
+} from "../api";
+// import { logger } from "./middlewares";
 
 export const store = createStore(
-    persistReducer(persistConfig, reduser),
+    combineReducers({
+        profile: profileReducer,
+        chats: chatsReducer,
+        messages: messagesReducer,
+        catFacts: catFactsReducer,
+        session: sessionReducer,
+    }),
     compose(
         applyMiddleware(
             // logger,
-            thunk.withExtraArgument({ getCatFactsApi }),
+            thunk.withExtraArgument({
+                getCatFactsApi,
+                createChatApi,
+                getChatsApi,
+                getMessagesApi,
+                sendMessageApi,
+                getSessionApi,
+                deleteChatApi,
+                deleteMessageApi,
+                updateValueApi,
+            }),
         ),
         window.__REDUX_DEVTOOLS_EXTENSION__
             ? window.__REDUX_DEVTOOLS_EXTENSION__()
             : (args) => args,
     ),
 );
-
-export const persistor = persistStore(store);

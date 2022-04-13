@@ -1,13 +1,16 @@
 import { Button, List } from "@mui/material";
-import { addNewChat, deleteChat, chatsSelector, clearChat } from "../../store";
+import {
+    chatsSelector,
+    getChatsFromDB,
+    createChatInDB,
+    deleteChatFromDB,
+} from "../../store";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { Chat } from "./chat";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 export const ChatsList = () => {
-    // const chats = useSelector((state) => state.chats.chats);
-    // вынос селектора для сохранения ссылки на функцию, передаваемой в качестве callback в useSelector
     const chats = useSelector(chatsSelector);
     const { roomId } = useParams();
     const dispatch = useDispatch();
@@ -18,7 +21,7 @@ export const ChatsList = () => {
         const isValidChatName = !chats.includes(name);
 
         if (name && isValidChatName) {
-            dispatch(addNewChat(name));
+            dispatch(createChatInDB(name));
         } else {
             alert("Incorrect name of the chat");
         }
@@ -26,25 +29,28 @@ export const ChatsList = () => {
 
     const deleteChatByName = useCallback(
         (name) => {
-            dispatch(clearChat(roomId));
-            dispatch(deleteChat(name));
+            dispatch(deleteChatFromDB(name));
 
             setTimeout(() => {
                 navigate("/chats");
             }, 0);
         },
-        [dispatch, navigate, roomId],
+        [dispatch, navigate],
     );
+
+    useEffect(() => {
+        dispatch(getChatsFromDB());
+    }, [dispatch]);
 
     return (
         <div className="chats-nav-container">
             <Button onClick={addNewChatByName}>New chat</Button>
             <List component="nav" className="chats">
-                {chats.map((chat, index) => (
-                    <Link key={chat} to={`/chats/${chat}`}>
+                {chats.map((chat) => (
+                    <Link key={chat.title} to={`/chats/${chat.title}`}>
                         <Chat
-                            title={chat}
-                            selected={roomId === chat}
+                            title={chat.title}
+                            selected={roomId === chat.title}
                             deleteChatByName={deleteChatByName}
                         />
                     </Link>

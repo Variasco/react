@@ -1,4 +1,6 @@
 import { React, useState } from "react";
+import { getAuth, signOut } from "firebase/auth";
+import { firebaseApp } from "../../api";
 import {
     Box,
     Toolbar,
@@ -18,6 +20,20 @@ const pages = [
         name: "Home",
         path: "/",
     },
+];
+
+const publicPages = [
+    {
+        name: "Sign in",
+        path: "/sign-in",
+    },
+    {
+        name: "Sign up",
+        path: "/sign-up",
+    },
+];
+
+const privatePages = [
     {
         name: "Chats",
         path: "/chats",
@@ -32,8 +48,12 @@ const pages = [
     },
 ];
 
-export const Header = () => {
+export const Header = ({ isAuth }) => {
     const [anchorElNav, setAnchorElNav] = useState(null);
+
+    const handleSignOut = () => {
+        signOut(getAuth(firebaseApp));
+    };
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -98,6 +118,38 @@ export const Header = () => {
                                     </Typography>
                                 </MenuItem>
                             ))}
+                            {isAuth &&
+                                privatePages.map((page) => (
+                                    <MenuItem
+                                        key={page.name}
+                                        onClick={handleCloseNavMenu}
+                                    >
+                                        <Typography
+                                            className="menu__link"
+                                            textAlign="center"
+                                        >
+                                            <Link to={page.path}>
+                                                {page.name}
+                                            </Link>
+                                        </Typography>
+                                    </MenuItem>
+                                ))}
+                            {!isAuth &&
+                                publicPages.map((page) => (
+                                    <MenuItem
+                                        key={page.name}
+                                        onClick={handleCloseNavMenu}
+                                    >
+                                        <Typography
+                                            className="menu__link"
+                                            textAlign="center"
+                                        >
+                                            <Link to={page.path}>
+                                                {page.name}
+                                            </Link>
+                                        </Typography>
+                                    </MenuItem>
+                                ))}
                         </Menu>
                     </Box>
                     {/* Меню на десктопе */}
@@ -123,7 +175,46 @@ export const Header = () => {
                                 </Link>
                             </Button>
                         ))}
+                        {isAuth &&
+                            privatePages.map((page) => (
+                                <Button
+                                    color="primary"
+                                    key={page.name}
+                                    onClick={handleCloseNavMenu}
+                                    sx={{
+                                        color: "white",
+                                        margin: 0,
+                                        padding: 0,
+                                    }}
+                                >
+                                    <Link className="menu__link" to={page.path}>
+                                        {page.name}
+                                    </Link>
+                                </Button>
+                            ))}
+                        {!isAuth &&
+                            publicPages.map((page) => (
+                                <Button
+                                    color="primary"
+                                    key={page.name}
+                                    onClick={handleCloseNavMenu}
+                                    sx={{
+                                        color: "white",
+                                        margin: 0,
+                                        padding: 0,
+                                    }}
+                                >
+                                    <Link className="menu__link" to={page.path}>
+                                        {page.name}
+                                    </Link>
+                                </Button>
+                            ))}
                     </Box>
+                    {isAuth && (
+                        <IconButton size="small" onClick={handleSignOut}>
+                            Sign out
+                        </IconButton>
+                    )}
                 </Toolbar>
             </Container>
         </AppBar>
