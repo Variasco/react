@@ -4,12 +4,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 export const Chat = ({ title, selected, deleteChatByName }) => {
     return (
-        <ListItem button selected={selected}>
+        <ListItem data-testid="chat-wrapper" button selected={selected}>
             <ListItemIcon>
                 <AccountCircle fontSize="large" />
             </ListItemIcon>
-            <ListItemText>{title}</ListItemText>
+            <ListItemText data-testid="title">{title}</ListItemText>
             <Button
+                data-testid="button"
                 sx={{ margin: 0, padding: 0, minWidth: "24px" }}
                 onClick={() => deleteChatByName(title)}
             >
